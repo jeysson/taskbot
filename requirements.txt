@@ -19,6 +19,7 @@ google-auth==2.38.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.0
 googleapis-common-protos==1.69.0
+gspread==5.12.0
 gunicorn==23.0.0
 httplib2==0.22.0
 idna==3.10
@@ -30,6 +31,7 @@ marisa-trie==1.2.1
 MarkupSafe==3.0.2
 murmurhash==1.0.12
 numpy==1.26.4
+oauth2client==4.1.3
 oauthlib==3.2.2
 packaging==24.2
 pdfminer.six==20221105
@@ -50,6 +52,7 @@ requests==2.32.3
 requests-oauthlib==2.0.0
 rsa==4.9
 setuptools==75.8.2
+six==1.17.0
 smart-open==6.4.0
 spacy==3.7.2
 spacy-legacy==3.0.12
