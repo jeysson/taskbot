@@ -1,10 +1,17 @@
 {% extends "base.html" %}
+{% block toast %}
+    <div class="toast toast-success" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Sucesso</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </div>
+{% endblock %}
 {% block content %}
     <div class="text-center mt-5">
-        <div class="alert alert-success">
-            <h4>Sucesso!</h4>
-            <p>{{ message }}</p>
-        </div>
         <a href="{{ url_for('task.upload') }}" class="btn btn-primary mt-3">Fazer Outro Upload</a>
     </div>
 {% endblock %}

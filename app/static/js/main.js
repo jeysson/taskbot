@@ -8,16 +8,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const canvas = document.getElementById('taskChart');
     if (canvas) {
-        const taskCount = parseInt(canvas.dataset.taskCount) || 0;  // Converte para inteiro, padrão 0 se inválido
+        console.log("data-dates:", canvas.dataset.dates);
+        console.log("data-counts:", canvas.dataset.counts);
+
+        let dates, counts;
+        const parseSafeJson = (data, fallback) => {
+            if (!data || data === "") return fallback;
+            try {
+                return JSON.parse(data);
+            } catch (e) {
+                console.error("Erro ao parsear JSON:", e, "Dados:", data);
+                return fallback;
+            }
+        };
+
+        dates = parseSafeJson(canvas.dataset.dates, []);
+        counts = parseSafeJson(canvas.dataset.counts, []);
 
         const ctx = canvas.getContext('2d');
         const taskChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Tarefas Processadas'],
+                labels: dates,
                 datasets: [{
-                    label: 'Quantidade',
-                    data: [taskCount],
+                    label: 'Tarefas por Dia',
+                    data: counts,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1

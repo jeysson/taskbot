@@ -14,3 +14,13 @@ body {
 .card {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.toast-success .toast-header {
+    background-color: #28a745;
+    color: white;
+}
+
+.toast-error .toast-header {
+    background-color: #dc3545;
+    color: white;
+}

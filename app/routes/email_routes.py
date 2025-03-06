@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from app.services.gmail_service import GmailService
 import json
 import os
+import pickle
 
 email_bp = Blueprint('email', __name__)
 gmail_service = GmailService()
