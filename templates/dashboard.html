@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>TaskBot Dashboard</h1>
+    <p>Tarefas processadas: {{ task_count }}</p>
+    <p>Tempo economizado: {{ "%.1f" % time_saved }} horas</p>
+    <h2>Histórico</h2>
+    <ul>
+    {% for task in tasks %}
+        <li>{{ task[0] }} em {{ task[1] }}: {{ task[2] }}</li>
+    {% endfor %}
+    </ul>
+    <a href="/">Voltar</a>
+</body>
+</html>
