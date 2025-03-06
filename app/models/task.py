@@ -1,9 +1,10 @@
 import sqlite3
 import datetime
+from app.factories.db_factory import ensure_db
 
 class Task:
     def __init__(self, db_path='taskbot.db'):
-        self.db_path = db_path
+        self.db_path = ensure_db(db_path)  # Garante que o banco exista
 
     def add_task(self, task_type, data):
         conn = sqlite3.connect(self.db_path)

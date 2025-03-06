@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from app.services.gmail_service import GmailService
 import json
 import os
-import pickle
 
 email_bp = Blueprint('email', __name__)
 gmail_service = GmailService()
@@ -26,7 +25,7 @@ def check_emails():
     if not service:
         return redirect(auth_redirect)
     gmail_service.check_emails(service)
-    return "E-mails verificados!"
+    return render_template('email/success.html', message="E-mails verificados!")
 
 @email_bp.route('/oauth2callback')
 def oauth2callback():
@@ -57,8 +56,7 @@ def oauth2callback():
         try:
             flow.fetch_token(code=request.args.get('code'), state=state)
             creds = flow.credentials
-            with open('token.pickle', 'wb') as f:
-                pickle.dump(creds, f)
+            gmail_service.gmail_model.save_credentials(creds)  # Salva no banco
             session['credentials'] = pickle.dumps(creds).decode('latin1')
             return render_template('email/auth_result.html', success=True)
         except Exception as e:

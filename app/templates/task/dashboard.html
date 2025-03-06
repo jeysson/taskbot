@@ -20,7 +20,8 @@
         </div>
     </div>
     <h2 class="mt-4">Histórico</h2>
-    <ul class="list-group">
+    <canvas id="taskChart" width="400" height="200" data-task-count="{{ task_count }}"></canvas>
+    <ul class="list-group mt-3">
     {% for task in tasks %}
         <li class="list-group-item">{{ task[0] }} em {{ task[1] }}: {{ task[2] }}</li>
     {% endfor %}
