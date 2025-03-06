@@ -10,13 +10,14 @@ import sqlite3
 import datetime
 import base64
 import pickle
+from requests import Request
 
 app = Flask(__name__)
 app.secret_key = 'sua-chave-secreta-aqui'  # Substitua por algo único e seguro
 
 # Configuração Google APIs
 SCOPE = [
-    "https://www.googleapis.com/auth/spreadsheets",  # Atualizado
+    "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/gmail.modify"
 ]
@@ -32,17 +33,24 @@ SHEET = SHEET_CLIENT.open("TaskBot Data").sheet1
 
 # Gmail (OAuth 2.0)
 def get_gmail_service():
-    if 'credentials' not in session:
-        token_base64 = os.getenv('GMAIL_TOKEN')
-        if token_base64:
-            creds = pickle.loads(base64.b64decode(token_base64))
-            if creds.valid:
-                session['credentials'] = pickle.dumps(creds).decode('latin1')
-                return build('gmail', 'v1', credentials=creds)
-        return redirect(url_for('oauth2callback'))
-    creds = pickle.loads(session['credentials'].encode('latin1'))
-    if not creds.valid:
-        return redirect(url_for('oauth2callback'))
+    creds = None
+    token_file = 'token.pickle'
+    token_base64 = os.getenv('GMAIL_TOKEN')
+    
+    if token_base64 and not session.get('credentials'):
+        creds = pickle.loads(base64.b64decode(token_base64))
+    elif os.path.exists(token_file):
+        with open(token_file, 'rb') as f:
+            creds = pickle.load(f)
+    
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+            with open(token_file, 'wb') as f:
+                pickle.dump(creds, f)
+        else:
+            return redirect(url_for('oauth2callback'))
+    session['credentials'] = pickle.dumps(creds).decode('latin1')
     return build('gmail', 'v1', credentials=creds)
 
 @app.route('/oauth2callback')
@@ -68,13 +76,19 @@ def oauth2callback():
             include_granted_scopes='true'
         )
         session['state'] = state
-        print(f"Por favor, visite este URL para autorizar: {authorization_url}")
-        return "Verifique o terminal para o URL de autorização."
+        return render_template('auth.html', auth_url=authorization_url)
     else:
         state = session.get('state')
-        flow.fetch_token(code=request.args.get('code'), state=state)
-        session['credentials'] = pickle.dumps(flow.credentials).decode('latin1')
-        return redirect(url_for('home'))
+        try:
+            flow.fetch_token(code=request.args.get('code'), state=state)
+            creds = flow.credentials
+            with open('token.pickle', 'wb') as f:
+                pickle.dump(creds, f)
+            session['credentials'] = pickle.dumps(creds).decode('latin1')
+            return render_template('auth_result.html', success=True)
+        except Exception as e:
+            error_message = f"Erro ao autenticar: {str(e)}"
+            return render_template('auth_result.html', success=False, error_message=error_message)
 
 # Configuração SQLite
 def init_db():
