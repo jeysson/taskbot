@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Upload de PDF</h1>
+    <form method="post" enctype="multipart/form-data" class="mt-3">
+        <div class="mb-3">
+            <input type="file" name="file" accept=".pdf" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+    {% if result %}
+        <div class="alert alert-success mt-3">
+            {{ result }}
+        </div>
+    {% endif %}
+{% endblock %}

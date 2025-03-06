@@ -1,6 +1,14 @@
 .venv/
-*.pyc
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.pickle
+*.json
+uploads/
 token.json
 credentials.json
 taskbot-service-account.json

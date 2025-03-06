@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="text-center mt-5">
+        {% if success %}
+            <div class="alert alert-success">
+                <h4>Autenticação bem-sucedida!</h4>
+                <p>Você foi autorizado com sucesso. Redirecionando em 3 segundos...</p>
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                <h4>Erro na autenticação</h4>
+                <p>{{ error_message }}. Redirecionando em 3 segundos...</p>
+            </div>
+        {% endif %}
+        <a href="{{ url_for('home') }}" class="btn btn-secondary mt-3">Voltar agora</a>
+    </div>
+    <meta http-equiv="refresh" content="3;url={{ url_for('home') }}">
+{% endblock %}
